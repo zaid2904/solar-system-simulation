@@ -1,0 +1,587 @@
+/* CSS Reset and Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    /* Light Theme Variables */
+    --bg-color: #0a0a0a;
+    --panel-bg: rgba(255, 255, 255, 0.95);
+    --panel-border: rgba(255, 255, 255, 0.2);
+    --text-color: #333;
+    --text-secondary: #666;
+    --accent-color: #4a9eff;
+    --accent-hover: #3d87d9;
+    --slider-track: #e0e0e0;
+    --slider-thumb: #4a9eff;
+    --tooltip-bg: rgba(0, 0, 0, 0.9);
+    --tooltip-text: #fff;
+}
+
+[data-theme="dark"] {
+    /* Dark Theme Variables */
+    --panel-bg: rgba(20, 20, 30, 0.95);
+    --panel-border: rgba(255, 255, 255, 0.1);
+    --text-color: #e0e0e0;
+    --text-secondary: #b0b0b0;
+    --slider-track: #444;
+    --tooltip-bg: rgba(255, 255, 255, 0.9);
+    --tooltip-text: #333;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: var(--bg-color);
+    color: var(--text-color);
+    overflow: hidden;
+    user-select: none;
+}
+
+/* Loading Screen */
+.loading {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #0c0c0c, #1a1a2e);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    transition: opacity 0.5s ease-out;
+}
+
+.loading.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.loading-spinner {
+    width: 50px;
+    height: 50px;
+    border: 3px solid rgba(74, 158, 255, 0.3);
+    border-top: 3px solid #4a9eff;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 20px;
+}
+
+.loading p {
+    color: #4a9eff;
+    font-size: 18px;
+    font-weight: 300;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Main Container */
+#container {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+}
+
+#three-canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+/* Control Panel */
+.control-panel {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    width: 320px;
+    max-height: calc(100vh - 40px);
+    background: var(--panel-bg);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--panel-border);
+    border-radius: 15px;
+    padding: 20px;
+    overflow-y: auto;
+    z-index: 100;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
+}
+
+.control-panel.collapsed {
+    transform: translateY(calc(100% - 60px));
+}
+
+.control-panel::-webkit-scrollbar {
+    width: 6px;
+}
+
+.control-panel::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.control-panel::-webkit-scrollbar-thumb {
+    background: var(--accent-color);
+    border-radius: 3px;
+}
+
+.panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid var(--panel-border);
+}
+
+.panel-header h2 {
+    color: var(--text-color);
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.panel-toggle {
+    background: var(--accent-color);
+    border: none;
+    border-radius: 8px;
+    padding: 8px 12px;
+    cursor: pointer;
+    font-size: 16px;
+    color: white;
+    transition: all 0.3s ease;
+    order: -1;
+}
+
+.panel-toggle:hover {
+    background: var(--accent-hover);
+    transform: scale(1.05);
+}
+
+.control-panel.collapsed .panel-toggle {
+    transform: rotate(180deg);
+}
+
+.theme-toggle {
+    background: none;
+    border: 1px solid var(--panel-border);
+    border-radius: 8px;
+    padding: 8px 12px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: all 0.3s ease;
+}
+
+.theme-toggle:hover {
+    background: var(--accent-color);
+    transform: scale(1.05);
+}
+
+/* Animation Controls */
+.animation-controls {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 25px;
+}
+
+.pause-btn, .reset-btn {
+    flex: 1;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    background: var(--accent-color);
+    color: white;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.pause-btn:hover, .reset-btn:hover {
+    background: var(--accent-hover);
+    transform: translateY(-2px);
+}
+
+.pause-btn.paused {
+    background: #ff6b6b;
+}
+
+/* Speed Controls */
+.speed-controls h3 {
+    color: var(--text-color);
+    margin-bottom: 15px;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.planet-control {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+    gap: 12px;
+}
+
+.planet-control label {
+    min-width: 70px;
+    color: var(--text-color);
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.planet-control input[type="range"] {
+    flex: 1;
+    height: 6px;
+    border-radius: 3px;
+    background: var(--slider-track);
+    outline: none;
+    appearance: none;
+}
+
+.planet-control input[type="range"]::-webkit-slider-thumb {
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: var(--slider-thumb);
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
+}
+
+.planet-control input[type="range"]::-webkit-slider-thumb:hover {
+    transform: scale(1.2);
+    box-shadow: 0 4px 12px rgba(74, 158, 255, 0.5);
+}
+
+.planet-control input[type="range"]::-moz-range-thumb {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: var(--slider-thumb);
+    cursor: pointer;
+    border: none;
+}
+
+.speed-value {
+    min-width: 40px;
+    color: var(--text-secondary);
+    font-size: 12px;
+    text-align: right;
+}
+
+/* Camera Controls */
+.camera-controls {
+    margin-top: 25px;
+    padding-top: 20px;
+    border-top: 1px solid var(--panel-border);
+}
+
+.camera-controls h3 {
+    color: var(--text-color);
+    margin-bottom: 10px;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.camera-controls p {
+    color: var(--text-secondary);
+    font-size: 12px;
+    margin-bottom: 5px;
+}
+
+/* Planet Tooltip */
+.planet-tooltip {
+    position: fixed;
+    background: var(--tooltip-bg);
+    color: var(--tooltip-text);
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-size: 14px;
+    pointer-events: none;
+    z-index: 200;
+    opacity: 0;
+    transform: translate(-50%, -100%) scale(0.8);
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+}
+
+.planet-tooltip.visible {
+    opacity: 1;
+    transform: translate(-50%, -120%) scale(1);
+}
+
+.tooltip-content h4 {
+    margin-bottom: 5px;
+    font-weight: 600;
+}
+
+.tooltip-content p {
+    margin: 0;
+    font-size: 12px;
+    opacity: 0.9;
+}
+
+/* Mobile Responsive Design */
+@media (max-width: 768px) {
+    .control-panel {
+        position: fixed;
+        top: auto;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        width: 100%;
+        max-height: 40vh;
+        border-radius: 20px 20px 0 0;
+        padding: 15px;
+        transform: translateY(calc(100% - 60px));
+        transition: transform 0.3s ease;
+    }
+
+    .control-panel.expanded {
+        transform: translateY(0);
+    }
+
+    .control-panel.collapsed {
+        transform: translateY(calc(100% - 60px));
+    }
+
+    .panel-header {
+        position: sticky;
+        top: 0;
+        background: var(--panel-bg);
+        z-index: 10;
+        margin-bottom: 15px;
+        padding-bottom: 10px;
+    }
+
+    .panel-header h2 {
+        font-size: 16px;
+    }
+
+    .panel-toggle {
+        order: 0;
+        margin-right: auto;
+        padding: 6px 10px;
+        font-size: 18px;
+    }
+
+    .control-panel.collapsed .panel-toggle {
+        transform: rotate(180deg);
+    }
+
+    .control-panel.expanded .panel-toggle {
+        transform: rotate(0deg);
+    }
+
+    .planet-control {
+        margin-bottom: 12px;
+    }
+
+    .planet-control label {
+        min-width: 60px;
+        font-size: 13px;
+        font-weight: 600;
+    }
+
+    .animation-controls {
+        margin-bottom: 15px;
+        position: sticky;
+        top: 50px;
+        background: var(--panel-bg);
+        padding: 10px 0;
+        z-index: 9;
+    }
+
+    .pause-btn, .reset-btn {
+        padding: 10px;
+        font-size: 13px;
+        touch-action: manipulation;
+    }
+
+    /* Improve touch targets */
+    .planet-control input[type="range"] {
+        height: 8px;
+        touch-action: manipulation;
+    }
+
+    .planet-control input[type="range"]::-webkit-slider-thumb {
+        width: 24px;
+        height: 24px;
+    }
+
+    .theme-toggle {
+        padding: 6px 10px;
+        font-size: 16px;
+        touch-action: manipulation;
+    }
+
+    .camera-controls {
+        margin-top: 15px;
+        padding-top: 15px;
+    }
+
+    .camera-controls h3 {
+        font-size: 14px;
+        margin-bottom: 8px;
+    }
+
+    .camera-controls p {
+        font-size: 11px;
+        margin-bottom: 3px;
+    }
+}
+
+@media (max-width: 480px) {
+    .control-panel {
+        padding: 12px;
+        max-height: 45vh;
+    }
+
+    .planet-control {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 6px;
+        background: rgba(255, 255, 255, 0.05);
+        padding: 10px;
+        border-radius: 8px;
+        margin-bottom: 8px;
+    }
+
+    .planet-control label {
+        min-width: auto;
+        text-align: center;
+        font-size: 13px;
+        font-weight: 600;
+        margin-bottom: 3px;
+    }
+
+    .speed-value {
+        text-align: center;
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--accent-color);
+    }
+
+    .animation-controls {
+        position: sticky;
+        top: 40px;
+        padding: 10px 0;
+    }
+
+    .pause-btn, .reset-btn {
+        padding: 12px;
+        font-size: 14px;
+        border-radius: 8px;
+    }
+
+    .panel-header h2 {
+        font-size: 14px;
+    }
+
+    .panel-toggle {
+        padding: 8px 12px;
+        font-size: 20px;
+    }
+
+    .theme-toggle {
+        padding: 8px 12px;
+        font-size: 18px;
+    }
+}
+
+/* Extra small screens */
+@media (max-width: 360px) {
+    .control-panel {
+        padding: 10px;
+        max-height: 50vh;
+    }
+
+    .planet-control {
+        padding: 8px;
+        margin-bottom: 6px;
+    }
+
+    .animation-controls {
+        flex-direction: column;
+        gap: 6px;
+    }
+
+    .pause-btn, .reset-btn {
+        width: 100%;
+        padding: 10px;
+    }
+
+    .panel-header {
+        margin-bottom: 10px;
+        padding-bottom: 8px;
+    }
+}
+
+/* Quick access button for mobile when panel is collapsed */
+@media (max-width: 768px) {
+    .control-panel.collapsed::before {
+        content: "⬆️ Controls";
+        position: absolute;
+        top: -45px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: var(--accent-color);
+        color: white;
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-size: 14px;
+        pointer-events: none;
+        opacity: 0.8;
+    }
+}
+
+/* Touch improvements for all mobile devices */
+@media (max-width: 768px) {
+    /* Prevent zoom on input focus */
+    input[type="range"] {
+        font-size: 16px;
+    }
+
+    /* Better touch response */
+    button, input[type="range"] {
+        touch-action: manipulation;
+    }
+
+    /* Prevent text selection on touch */
+    .control-panel {
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -khtml-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
+
+    /* Allow text selection for labels */
+    .planet-control label {
+        -webkit-user-select: text;
+        -moz-user-select: text;
+        -ms-user-select: text;
+        user-select: text;
+    }
+}
+
+/* Custom Scrollbar for Mobile */
+@media (max-width: 768px) {
+    .control-panel::-webkit-scrollbar {
+        width: 4px;
+    }
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
