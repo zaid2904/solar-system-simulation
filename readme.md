@@ -1,3 +1,6 @@
+# preview
+![alt text](image.png)
+![alt text](image-1.png)
 # 3D Solar System Simulation
 
 A stunning interactive 3D solar system simulation built with Three.js, featuring realistic planetary orbits, real-time speed controls, and immersive user interactions.
